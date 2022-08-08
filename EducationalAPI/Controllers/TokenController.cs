@@ -1,6 +1,6 @@
 ﻿namespace EducationalAPI.Controllers
 {
-    public class TokenController
+    public class TokenController : ControllerBase
     {
     }
 }

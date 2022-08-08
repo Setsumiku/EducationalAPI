@@ -1,4 +1,5 @@
 using EducationalAPI.Data.Context;
+using EducationalAPI.Data.DAL;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -23,6 +24,7 @@ void Setups(WebApplicationBuilder builder)
 {
     var connectionString = builder.Configuration.GetConnectionString("EducationalAPIDb");
     builder.Services.AddDbContext<EducationalAPIContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();

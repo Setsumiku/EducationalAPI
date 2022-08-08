@@ -1,6 +1,6 @@
 ﻿namespace EducationalAPI.Controllers
 {
-    public class EducationalMaterialNavpointsController
+    public class EducationalMaterialNavpointsController : ControllerBase
     {
     }
 }

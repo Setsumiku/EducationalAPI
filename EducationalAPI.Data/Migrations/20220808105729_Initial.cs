@@ -105,10 +105,10 @@ namespace EducationalAPI.Data.Migrations
                 columns: new[] { "AuthorId", "AmountOfMaterials", "AuthorDesc", "AuthorName" },
                 values: new object[,]
                 {
-                    { 1, null, "Mentor and programmer", null },
-                    { 2, null, "Some random guy with a webcam", null },
-                    { 3, null, "Mood booster and lifestyle coach", null },
-                    { 4, null, "It just works", null }
+                    { 1, "Dominik", "Mentor and programmer", 0 },
+                    { 2, "Youtuber", "Some random guy with a webcam", 0 },
+                    { 3, "Dog", "Mood booster and lifestyle coach", 0 },
+                    { 4, "Todd Howard", "It just works", 0 }
                 });
 
             migrationBuilder.InsertData(
