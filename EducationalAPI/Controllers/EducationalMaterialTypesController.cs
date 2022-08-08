@@ -1,6 +1,6 @@
 ﻿namespace EducationalAPI.Controllers
 {
-    public class ReviewController
+    public class EducationalMaterialTypesController
     {
     }
 }
