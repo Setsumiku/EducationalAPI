@@ -14,10 +14,9 @@ namespace EducationalAPI.Profiles
                     .ForMember(navpoint => navpoint.EduMatTimeCreated, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatTimeCreated))
                     .ForMember(navpoint => navpoint.EduMatReviews, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatReviews));
             CreateMap<EduMatNavpointWriteDTO, EduMatNavpoint>()
-                    .ForPath(navpoint => navpoint.EduMatAuthor.AuthorId, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatAuthorId))
-                    .ForPath(navpoint => navpoint.EduMatType.EduMatTypeId, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatTypeId))
                     .ForMember(navpoint => navpoint.EduMatTitle, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatTitle))
-                    .ForMember(navpoint => navpoint.EduMatLocation, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatLocation));
+                    .ForMember(navpoint => navpoint.EduMatLocation, navpointDto => navpointDto.MapFrom(navpoint => navpoint.EduMatLocation))
+                    .ReverseMap();
         }
     }
 }

@@ -7,6 +7,11 @@
         public string? AuthorName { get; set; }
         public string? AuthorDesc { get; set; }
         public List<EduMatNavpoint>? EduMatNavpoints { get; set; }
-        public int? AmountOfMaterials { get; set; }
+        public int? AmountOfMaterials { get; set; } = 0;
+
+        public Author()
+        {
+            AmountOfMaterials++;
+        }
     }
 }

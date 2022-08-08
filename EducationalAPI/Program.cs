@@ -1,6 +1,7 @@
 using EducationalAPI.Data.Context;
 using EducationalAPI.Data.DAL;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,10 @@ app.Run();
 
 void Setups(WebApplicationBuilder builder)
 {
+    builder.Services.AddControllers().AddNewtonsoftJson(s =>
+    {
+        s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    });
     var connectionString = builder.Configuration.GetConnectionString("EducationalAPIDb");
     builder.Services.AddDbContext<EducationalAPIContext>(options => options.UseSqlServer(connectionString));
     builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
