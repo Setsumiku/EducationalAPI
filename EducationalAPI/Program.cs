@@ -1,5 +1,6 @@
 using EducationalAPI.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+Setups(builder);
+
+void Setups(WebApplicationBuilder builder)
+{
+    var logger = new LoggerConfiguration().WriteTo.File(builder.Configuration.GetValue<string>("Logging:FilePath")).CreateLogger();
+    builder.Logging.ClearProviders();
+    builder.Logging.AddSerilog(logger);
+}
 
 var app = builder.Build();
 
