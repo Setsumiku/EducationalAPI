@@ -1,7 +1,4 @@
-﻿using EducationalAPI.Data.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace EducationalAPI.Data.Context
+﻿namespace EducationalAPI.Data.Context
 {
     public class EducationalAPIContext : DbContext
     {
@@ -13,7 +10,6 @@ namespace EducationalAPI.Data.Context
 
         public EducationalAPIContext(DbContextOptions<EducationalAPIContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

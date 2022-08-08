@@ -10,6 +10,5 @@
         public EduMatType? EduMatType { get; set; }
         public List<Review>? EduMatReviews { get; set; }
         public DateTime? EduMatTimeCreated { get; set; }
-
     }
 }
