@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EducationalAPI.Data.Models
+﻿namespace EducationalAPI.Data.Models
 {
-    internal class User
+    public class User
     {
+        [Key]
+        public int UserId { get; set; }
+        public string UserRole { get; set; }
+        public int UserLogin { get; set; }
+        public string UserPassword { get; set; }
     }
 }
