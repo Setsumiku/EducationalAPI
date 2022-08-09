@@ -1,6 +1,6 @@
 ﻿namespace EducationalAPI.DTO.ReadDTO
 {
-    public class AuthorReadDTO
+    public class AuthorReadDTO : WrappedEntity
     {
         internal int AuthorId { get; set; }
         public string AuthorName { get; set; }

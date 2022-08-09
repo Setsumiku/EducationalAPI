@@ -1,6 +1,6 @@
 ﻿namespace EducationalAPI.DTO.ReadDTO
 {
-    public class EduMatTypeReadDTO
+    public class EduMatTypeReadDTO : WrappedEntity
     {
         internal int EduMatTypeId { get; set; }
         public string EduMatTypeName { get; set; }

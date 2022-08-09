@@ -5,3 +5,4 @@ global using AutoMapper;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Authorization;
 global using System.Web.Http.Cors;
+global using EducationalAPI.Links;

@@ -1,6 +1,6 @@
 ﻿namespace EducationalAPI.DTO.ReadDTO
 {
-    public class ReviewReadDTO
+    public class ReviewReadDTO : WrappedEntity
     {
         internal int ReviewId { get; set; }
         public string ReviewContents { get; set; }

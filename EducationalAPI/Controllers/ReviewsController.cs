@@ -1,5 +1,6 @@
 ﻿using EducationalAPI.Data.DAL;
 using EducationalAPI.Data.Models;
+using EducationalAPI.Links;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace EducationalAPI.Controllers
@@ -13,11 +14,13 @@ namespace EducationalAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Review> _reviewRepository;
         private readonly IGenericRepository<EduMatNavpoint> _navpointRepository;
-        public ReviewsController(IMapper mapper, IGenericRepository<Review> reviewRepository, IGenericRepository<EduMatNavpoint> navpointRepository)
+        private readonly LinkGenerator _linkGenerator;
+        public ReviewsController(IMapper mapper, IGenericRepository<Review> reviewRepository, IGenericRepository<EduMatNavpoint> navpointRepository, LinkGenerator linkGenerator)
         {
             _mapper = mapper;
             _reviewRepository = reviewRepository;
             _navpointRepository = navpointRepository;
+            _linkGenerator = linkGenerator;
         }
         /// <summary>
         /// Use to receive all Reviews
@@ -30,8 +33,18 @@ namespace EducationalAPI.Controllers
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get()
         {
-            var reviews = _mapper.Map<IEnumerable<ReviewReadDTO>>(await _reviewRepository.GetAllAsync(new [] { "EduMatNavpoint" }));
-            return Ok(reviews);
+            var reviews = _mapper.Map<IEnumerable<ReviewReadDTO>>(await _reviewRepository.GetAllAsync(new[] { "EduMatNavpoint" }));
+            for (var index = 0; index < reviews.Count(); index++)
+            {
+                //reviews.ElementAt(index).Add("Contents", new { reviews.ElementAt(index).ReviewContents });
+                //reviews.ElementAt(index).Add("Score", new { reviews.ElementAt(index).ReviewScore });
+                //reviews.ElementAt(index).Add("Navpoint", new { reviews.ElementAt(index).EduMatNavpoint });
+                var reviewLinks = CreateLinks(reviews.ElementAt(index).ReviewId);
+                reviews.ElementAt(index).Add("Links", reviewLinks);
+            }
+            var reviewsWrapper = new LinkWrapper<ReviewReadDTO>(reviews);
+            return Ok(CreateLinksWrapped(reviewsWrapper));
+            //return Ok(reviews);
         }
 
         /// <summary>
@@ -45,7 +58,7 @@ namespace EducationalAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var reviewToDelete = await _reviewRepository.GetSingleByConditionAsync(r=>r.ReviewId==id,Array.Empty<string>());
+            var reviewToDelete = await _reviewRepository.GetSingleByConditionAsync(r => r.ReviewId == id, Array.Empty<string>());
             _ = await _reviewRepository.DeleteAsync(reviewToDelete);
             return NoContent();
         }
@@ -87,6 +100,36 @@ namespace EducationalAPI.Controllers
             reviewToAdd.EduMatNavpoint = navpointToInsert;
             var createdReview = await _reviewRepository.CreateAsync(reviewToAdd);
             return Created(string.Empty, createdReview.ReviewId);
+        }
+
+        private IEnumerable<Link> CreateLinks(int id)
+        {
+            var links = new List<Link>
+            {
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(Get), values: new { id }),
+                "self",
+                "GET"),
+
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(Delete), values: new { id }),
+                "delete_review",
+                "DELETE"),
+
+                new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(Update), values: new { id }),
+                "edit_review",
+                "PUT")
+            };
+            return links;
+        }
+
+        private LinkWrapper<ReviewReadDTO> CreateLinksWrapped(LinkWrapper<ReviewReadDTO> reviewsWrapper)
+        {
+            reviewsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(Get)),
+                    "self",
+                    "GET"));
+            reviewsWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(Create)),
+                    "self",
+                    "CREATE"));
+            return reviewsWrapper;
         }
     }
 }
