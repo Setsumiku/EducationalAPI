@@ -1,5 +1,6 @@
 ﻿using EducationalAPI.Data.DAL;
 using EducationalAPI.Data.Models;
+using EducationalAPI.Utils;
 
 namespace EducationalAPI.Controllers
 {
@@ -24,7 +25,7 @@ namespace EducationalAPI.Controllers
         [HttpPost("users")]
         public async Task<IActionResult> Add([FromBody] string userRole, string userLogin, string userPassword)
         {
-            var savedUser = await _userRepository.CreateAsync(new User() { UserRole = userRole, UserLogin=userLogin, UserPassword=userPassword});
+            var savedUser = await _userRepository.CreateAsync(new User() { UserRole = userRole, UserLogin = Hashing.Hash(userLogin), UserPassword = Hashing.Hash(userPassword) });
             return Created(string.Empty , savedUser.UserId);
         }
     }

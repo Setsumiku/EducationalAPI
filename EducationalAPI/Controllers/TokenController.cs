@@ -1,5 +1,6 @@
 ﻿using EducationalAPI.Data.DAL;
 using EducationalAPI.Data.Models;
+using EducationalAPI.DTO;
 using EducationalAPI.Utils;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +9,8 @@ using System.Text;
 
 namespace EducationalAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class TokenController : ControllerBase
     {
         public IConfiguration _configuration;
@@ -21,14 +24,21 @@ namespace EducationalAPI.Controllers
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Log in with your credentials
+        /// </summary>
+        /// <param name="_userData"></param>
+        /// <response code="400">Bad Request</response>
+        /// <response code="200">Ok</response>
+        /// <returns>JWT Token if successful</returns>
         [HttpPost]
-        public async Task<IActionResult> Post(UserReadDTO _userData)
+        public async Task<IActionResult> Post(UserLoginDTO _userData)
         {
             if (_userData?.UserLogin != null && _userData.UserPassword != null)
             {
                 var hashedLogin = Hashing.Hash(_userData.UserLogin);
                 var hashedPassword = Hashing.Hash(_userData.UserPassword);
-                var user = await GetUser(_userData.UserName, _userData.Password);
+                var user = await GetUser(hashedLogin,hashedPassword);
                 if (user != null)
                 {
                     var claims = new[] {
@@ -36,8 +46,9 @@ namespace EducationalAPI.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim("UserId", user.UserId.ToString()),
-                        new Claim("UserLogin", user.DisplayName),
-                        new Claim("UserPassword", user.UserName),
+                        new Claim("UserLogin", user.UserLogin),
+                        new Claim("UserPassword", user.UserPassword),
+                        new Claim(ClaimTypes.Role, user.UserRole)
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
