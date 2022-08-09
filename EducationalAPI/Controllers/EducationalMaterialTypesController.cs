@@ -30,7 +30,6 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Get()
         {
             var eduMatTypes = _mapper.Map<IEnumerable<EduMatTypeReadDTO>>(await _eduMatTypeRepository.GetAllAsync(Array.Empty<string>()));
-            if (eduMatTypes is null) return NotFound();
             return Ok(eduMatTypes);
         }
         /// <summary>
@@ -46,7 +45,6 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> GetAllNavpointsByMaterialType(int id)
         {
             var navpoints = await _navpointRepository.GetMultipleByConditionAsync(p => p.EduMatType.EduMatTypeId == id, new string[] { "EduMatType", "EduMatAuthor","EduMatReviews" });
-            if (navpoints is null) return NotFound();
             var mappedNavpoints = _mapper.Map<IEnumerable<EduMatNavpointReadDTO>>(navpoints);
             return Ok(mappedNavpoints);
         }

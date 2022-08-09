@@ -31,7 +31,6 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Get()
         {
             var reviews = _mapper.Map<IEnumerable<ReviewReadDTO>>(await _reviewRepository.GetAllAsync(new [] { "EduMatNavpoint" }));
-            if (reviews is null) return NotFound();
             return Ok(reviews);
         }
 
@@ -47,7 +46,6 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var reviewToDelete = await _reviewRepository.GetSingleByConditionAsync(r=>r.ReviewId==id,Array.Empty<string>());
-            if (reviewToDelete is null) return NotFound();
             _ = await _reviewRepository.DeleteAsync(reviewToDelete);
             return NoContent();
         }
@@ -63,7 +61,6 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Update(int id, JsonPatchDocument<ReviewWriteDTO> reviewWriteDTO)
         {
             var reviewToUpdate = await _reviewRepository.GetSingleByConditionAsync(r => r.ReviewId == id, Array.Empty<string>());
-            if (reviewToUpdate is null) return NotFound();
             var reviewToPatch = _mapper.Map<ReviewWriteDTO>(reviewToUpdate);
             reviewWriteDTO.ApplyTo(reviewToPatch, ModelState);
             if (TryValidateModel(reviewToUpdate))

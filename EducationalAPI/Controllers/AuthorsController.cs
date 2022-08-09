@@ -32,7 +32,6 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Get()
         {
             var authors = _mapper.Map<IEnumerable<AuthorReadDTO>>(await _authorRepository.GetAllAsync(new[] { "EduMatNavpoints" }));
-            if (authors is null) return NotFound();
             return Ok(authors);
         }
         /// <summary>
@@ -49,13 +48,11 @@ namespace EducationalAPI.Controllers
         {
 
             var navpointsWithAuthor = await _eduMatNavpointRepository.GetMultipleByConditionAsync(p => p.EduMatAuthor.AuthorId == id, new string[] { "EduMatAuthor", "EduMatReviews" });
-            if(navpointsWithAuthor is null) return NotFound();
             List<EduMatNavpoint> navpointsWithHighAverage = new();
             foreach(var navpoint in navpointsWithAuthor)
             {
                 if(navpoint.CalculateAverageReviewScore()>5) navpointsWithHighAverage.Add(navpoint);
             }
-            if(navpointsWithHighAverage is null) return NotFound();
             var mappedNavpoints = _mapper.Map<IEnumerable<EduMatNavpointReadDTO>>(navpointsWithHighAverage);
             return Ok(mappedNavpoints);
         }
@@ -72,7 +69,6 @@ namespace EducationalAPI.Controllers
         {
 
             var authors = await _authorRepository.GetAllAsync(Array.Empty<string>());
-            if (authors is null) return NotFound();
             var mostProductiveAuthor = authors.MaxBy(a => a.AmountOfMaterials);
             return Ok(mostProductiveAuthor);
         }

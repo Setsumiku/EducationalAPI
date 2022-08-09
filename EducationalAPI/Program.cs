@@ -1,6 +1,6 @@
-using EducationalAPI.Controllers.Middlewares;
 using EducationalAPI.Data.Context;
 using EducationalAPI.Data.DAL;
+using EducationalAPI.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,19 +18,58 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-Caching.UseCache(app);
 app.UseCors();
+app.Use(async (context, next) =>
+{
+    context.Response.GetTypedHeaders().CacheControl =
+        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+        {
+            Public = true,
+            MaxAge = TimeSpan.FromSeconds(60)
+        };
+    context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+        new string[] { "Accept-Encoding" };
 
+    await next();
+});
+//app.Use(async (context, next) =>
+//{
+//    try
+//    {
+//        await next.Invoke(context);
+//    }
+//    catch (NullReferenceException e)
+//    {
+//        context.Response.StatusCode = 404;
+//        await context.Response.WriteAsJsonAsync("Not Found");
+//    }
+//    catch (ArgumentNullException e)
+//    {
+//        context.Response.StatusCode = 404;
+//        await context.Response.WriteAsJsonAsync("Not Found");
+//    }
+//    catch (DbUpdateConcurrencyException e)
+//    {
+//        context.Response.StatusCode = 500;
+//        await context.Response.WriteAsJsonAsync("Try again in a moment, database is busy");
+//    }
+//    catch (Exception e)
+//    {
+//        context.Response.StatusCode = 500;
+//        await context.Response.WriteAsJsonAsync("Threw unexpected exception");
+//    }
+//});
 app.Run();
 
 void DoSetups(WebApplicationBuilder builder)
 {
+    builder.Services.AddTransient<ErrorHandlerMiddleware>();
     builder.Services.AddControllers().AddNewtonsoftJson(s =>
     {
         s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
