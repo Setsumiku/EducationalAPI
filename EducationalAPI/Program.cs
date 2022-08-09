@@ -34,7 +34,7 @@ void DoSetups(WebApplicationBuilder builder)
     {
         s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
     });
-    var connectionString = builder.Configuration.GetConnectionString("EducationalAPIDb");
+    var connectionString = builder.Configuration["EducationalAPI:ConnectionString"];
     builder.Services.AddDbContext<EducationalAPIContext>(options => options.UseSqlServer(connectionString));
     builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     builder.Services.AddControllers();
