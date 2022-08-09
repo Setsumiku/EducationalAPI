@@ -45,6 +45,7 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> GetAllNavpointsByMaterialType(int id)
         {
             var navpoints = await _navpointRepository.GetMultipleByConditionAsync(p => p.EduMatType.EduMatTypeId == id, new string[] { "EduMatType", "EduMatAuthor","EduMatReviews" });
+            if (navpoints is null) return NotFound();
             var mappedNavpoints = _mapper.Map<IEnumerable<EduMatNavpointReadDTO>>(navpoints);
             return Ok(mappedNavpoints);
         }

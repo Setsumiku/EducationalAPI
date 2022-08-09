@@ -46,6 +46,7 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var reviewToDelete = await _reviewRepository.GetSingleByConditionAsync(r=>r.ReviewId==id,Array.Empty<string>());
+            if (reviewToDelete is null) return NotFound();
             _ = await _reviewRepository.DeleteAsync(reviewToDelete);
             return NoContent();
         }
@@ -70,6 +71,24 @@ namespace EducationalAPI.Controllers
                 return NoContent();
             }
             else return NotFound();
+        }
+        /// <summary>
+        /// Use to Edit a Review
+        /// </summary>
+        /// <param name="id">Id of the review</param>
+        /// <response code="404">Not found</response>
+        /// <response code="204">No content</response>
+        // PUT: api/<EducationalAPI>/reviews/id
+        [HttpPut("reviews/{id}")]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> UpdatePut(int id, ReviewWriteDTO reviewWriteDTO)
+        {
+            var reviewToUpdate = await _reviewRepository.GetSingleByConditionAsync(r => r.ReviewId == id, Array.Empty<string>());
+            if(reviewToUpdate is null) return NotFound();
+            reviewToUpdate.ReviewScore = reviewWriteDTO.ReviewScore;
+            reviewToUpdate.ReviewContents = reviewWriteDTO.ReviewContents;
+            _ = await _reviewRepository.UpdateAsync(reviewToUpdate);
+            return NoContent();
         }
         /// <summary>
         /// Use to Create Review

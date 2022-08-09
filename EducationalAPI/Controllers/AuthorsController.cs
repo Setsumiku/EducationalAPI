@@ -48,6 +48,7 @@ namespace EducationalAPI.Controllers
         {
 
             var navpointsWithAuthor = await _eduMatNavpointRepository.GetMultipleByConditionAsync(p => p.EduMatAuthor.AuthorId == id, new string[] { "EduMatAuthor", "EduMatReviews" });
+            if (navpointsWithAuthor is null) return NotFound();
             List<EduMatNavpoint> navpointsWithHighAverage = new();
             foreach(var navpoint in navpointsWithAuthor)
             {
@@ -69,6 +70,7 @@ namespace EducationalAPI.Controllers
         {
 
             var authors = await _authorRepository.GetAllAsync(Array.Empty<string>());
+            if (authors is null) return NotFound();
             var mostProductiveAuthor = authors.MaxBy(a => a.AmountOfMaterials);
             return Ok(mostProductiveAuthor);
         }

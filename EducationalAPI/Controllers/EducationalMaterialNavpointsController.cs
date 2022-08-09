@@ -47,6 +47,7 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Update(int id, string title, string location)
         {
             var navpointToUpdate = await _eduMatNavpointRepository.GetSingleByConditionAsync(navpoint => navpoint.EduMatNavpointId == id, Array.Empty<string>());
+            if (navpointToUpdate is null) return NotFound();
             navpointToUpdate.EduMatTitle = title;
             navpointToUpdate.EduMatLocation = location;
             _ = await _eduMatNavpointRepository.UpdateAsync(navpointToUpdate);
@@ -81,6 +82,7 @@ namespace EducationalAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var navpointToDelete = await _eduMatNavpointRepository.GetSingleByConditionAsync(s => s.EduMatNavpointId == id, Array.Empty<string>());
+            if (navpointToDelete is null) return NotFound();
             _ = await _eduMatNavpointRepository.DeleteAsync(navpointToDelete);
             return NoContent();
         }
