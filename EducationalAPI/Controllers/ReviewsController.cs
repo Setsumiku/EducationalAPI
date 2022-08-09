@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace EducationalAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReviewsController : ControllerBase
@@ -26,7 +26,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/reviews
         [HttpGet("reviews")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get()
         {
             var reviews = _mapper.Map<IEnumerable<ReviewReadDTO>>(await _reviewRepository.GetAllAsync(new [] { "EduMatNavpoint" }));
@@ -42,7 +42,7 @@ namespace EducationalAPI.Controllers
         /// <response code="204">No content</response>
         // DELETE: api/<EducationalAPI>/reviews/id
         [HttpDelete("reviews/{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var reviewToDelete = await _reviewRepository.GetSingleByConditionAsync(r=>r.ReviewId==id,Array.Empty<string>());
@@ -58,7 +58,7 @@ namespace EducationalAPI.Controllers
         /// <response code="204">No content</response>
         // PATCH: api/<EducationalAPI>/reviews/id
         [HttpPatch("reviews/{id}")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Update(int id, JsonPatchDocument<ReviewWriteDTO> reviewWriteDTO)
         {
             var reviewToUpdate = await _reviewRepository.GetSingleByConditionAsync(r => r.ReviewId == id, Array.Empty<string>());
@@ -81,7 +81,7 @@ namespace EducationalAPI.Controllers
         /// <response code="201">Created</response>
         // POST api/<EducationalAPI>/reviews
         [HttpPost("reviews")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create(int id, ReviewWriteDTO review)
         {
             Review reviewToAdd = _mapper.Map<Review>(review);

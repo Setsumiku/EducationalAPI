@@ -3,7 +3,7 @@ using EducationalAPI.Data.Models;
 
 namespace EducationalAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]
     public class EducationalMaterialTypesController : ControllerBase
@@ -25,7 +25,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/educationalmaterialtypes
         [HttpGet("educationalmaterialtypes")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get()
         {
             var eduMatTypes = _mapper.Map<IEnumerable<EduMatTypeReadDTO>>(await _eduMatTypeRepository.GetAllAsync(Array.Empty<string>()));
@@ -41,7 +41,7 @@ namespace EducationalAPI.Controllers
         /// <param name="id">ID for Mat Type</param>
         // GET: api/<EducationalAPI>/educationalmaterialtypes/getallnavpointsbymaterialtype
         [HttpGet("educationalmaterialtypes/getallnavpointsbymaterialtype")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetAllNavpointsByMaterialType(int id)
         {
             var navpoints = await _navpointRepository.GetMultipleByConditionAsync(p => p.EduMatType.EduMatTypeId == id, new string[] { "EduMatType", "EduMatAuthor","EduMatReviews" });

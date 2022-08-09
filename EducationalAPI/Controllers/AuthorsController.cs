@@ -3,7 +3,7 @@ using EducationalAPI.Data.Models;
 
 namespace EducationalAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorsController : ControllerBase
@@ -26,7 +26,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/authors
         [HttpGet("authors")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get()
         {
             var authors = _mapper.Map<IEnumerable<AuthorReadDTO>>(await _authorRepository.GetAllAsync(new[] { "EduMatNavpoints" }));
@@ -42,7 +42,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/authors/{id}/GetHighAverageMaterials
         [HttpGet("authors/{id}/GetHighAverageMaterials")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetHighAverage(int id)
         {
 
@@ -65,7 +65,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/authors/GetMostProductiveAuthor
         [HttpGet("authors/GetMostProductiveAuthor")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetMostProductiveAuthor()
         {
 

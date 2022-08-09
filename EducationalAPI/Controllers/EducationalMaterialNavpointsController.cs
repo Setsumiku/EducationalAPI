@@ -3,7 +3,7 @@ using EducationalAPI.Data.Models;
 
 namespace EducationalAPI.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]
     public class EducationalMaterialNavpointsController : ControllerBase
@@ -27,7 +27,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/educationalmaterialnavpoints
         [HttpGet("educationalmaterialnavpoints")]
-        //[Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Get()
         {
             var eduMatNavpoints = _mapper.Map<IEnumerable<EduMatNavpointReadDTO>>(await _eduMatNavpointRepository.GetAllAsync(new string[] { "EduMatReviews", "EduMatType", "EduMatAuthor" }));
@@ -43,7 +43,7 @@ namespace EducationalAPI.Controllers
         /// <returns>No Content</returns>
         // PUT api/<EducationalAPI>/educationalmaterialnavpoints/{id}
         [HttpPut("educationalmaterialnavpoints/{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, string title, string location)
         {
             var navpointToUpdate = await _eduMatNavpointRepository.GetSingleByConditionAsync(navpoint => navpoint.EduMatNavpointId == id, Array.Empty<string>());
@@ -60,7 +60,7 @@ namespace EducationalAPI.Controllers
         /// <response code="204">No content</response>
         // POST api/<EducationalAPI>/educationalmaterialnavpoints
         [HttpPost("educationalmaterialnavpoints")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(EduMatNavpointWriteDTO navpoint)
         {
             EduMatNavpoint navpointToAdd = _mapper.Map<EduMatNavpoint>(navpoint);
@@ -78,7 +78,7 @@ namespace EducationalAPI.Controllers
         /// <response code="404">Not found</response>
         // DELETE api/<EducationalAPI>/educationalmaterialnavpoints
         [HttpDelete("educationalmaterialnavpoints/{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var navpointToDelete = await _eduMatNavpointRepository.GetSingleByConditionAsync(s => s.EduMatNavpointId == id, Array.Empty<string>());
