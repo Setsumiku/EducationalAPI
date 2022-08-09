@@ -1,3 +1,4 @@
+using EducationalAPI.Controllers.Middlewares;
 using EducationalAPI.Data.Context;
 using EducationalAPI.Data.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +24,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+Caching.UseCache(app);
 app.UseCors();
 
 app.Run();
