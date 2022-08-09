@@ -14,13 +14,11 @@ namespace EducationalAPI.Controllers
     public class TokenController : ControllerBase
     {
         public IConfiguration _configuration;
-        private readonly IMapper _mapper;
         private readonly IGenericRepository<User> _userRepository;
 
-        public TokenController(IConfiguration config, IMapper mapper, IGenericRepository<User> userRepository)
+        public TokenController(IConfiguration config, IGenericRepository<User> userRepository)
         {
             _configuration = config;
-            _mapper = mapper;
             _userRepository = userRepository;
         }
 
