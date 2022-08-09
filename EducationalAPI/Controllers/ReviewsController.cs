@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 
 namespace EducationalAPI.Controllers
 {
-    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "get,delete,patch,post")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]

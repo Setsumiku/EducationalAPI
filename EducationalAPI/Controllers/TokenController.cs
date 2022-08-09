@@ -9,7 +9,7 @@ using System.Text;
 
 namespace EducationalAPI.Controllers
 {
-    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "post")]
     [Route("api/[controller]")]
     [ApiController]
     public class TokenController : ControllerBase

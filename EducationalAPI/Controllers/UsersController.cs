@@ -4,7 +4,7 @@ using EducationalAPI.Utils;
 
 namespace EducationalAPI.Controllers
 {
-    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "post")]
     [Authorize(AuthenticationSchemes = "Bearer" , Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]

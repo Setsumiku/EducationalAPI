@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EducationalAPI.Controllers
 {
-    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     [ApiController]
     [Route("api")]
     public class HomeController : ControllerBase
