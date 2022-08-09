@@ -58,11 +58,11 @@ namespace EducationalAPI.Controllers
         /// <response code="204">No content</response>
         // PATCH: api/<EducationalAPI>/reviews/id
         [HttpPatch("reviews/{id}")]
-        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Update(int id, JsonPatchDocument<ReviewWriteDTO> reviewWriteDTO)
         {
-            var reviewToUpdate = await _reviewRepository.GetSingleByConditionAsync(r=> r.ReviewId == id, Array.Empty<string>());
-            if (reviewToUpdate is null) return BadRequest();
+            var reviewToUpdate = await _reviewRepository.GetSingleByConditionAsync(r => r.ReviewId == id, Array.Empty<string>());
+            if (reviewToUpdate is null) return NotFound();
             var reviewToPatch = _mapper.Map<ReviewWriteDTO>(reviewToUpdate);
             reviewWriteDTO.ApplyTo(reviewToPatch, ModelState);
             if (TryValidateModel(reviewToUpdate))
@@ -74,19 +74,21 @@ namespace EducationalAPI.Controllers
             else return NotFound();
         }
         /// <summary>
-        /// Use to Create Navpoint
+        /// Use to Create Review
         /// </summary>
-        /// <returns>No Content</returns>
+        /// <param name="id">Id of navpoint to review</param>
+        /// <returns>Created</returns>
+        /// <response code="201">Created</response>
         // POST api/<EducationalAPI>/reviews
         [HttpPost("reviews")]
-        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create(int id, ReviewWriteDTO review)
         {
             Review reviewToAdd = _mapper.Map<Review>(review);
             var navpointToInsert = await _navpointRepository.GetSingleByConditionAsync(p => p.EduMatNavpointId == id, Array.Empty<string>());
             reviewToAdd.EduMatNavpoint = navpointToInsert;
-            _ = await _reviewRepository.CreateAsync(reviewToAdd);
-            return NoContent();
+            var createdReview = await _reviewRepository.CreateAsync(reviewToAdd);
+            return Created(string.Empty, createdReview.ReviewId);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using EducationalAPI.Data.DAL;
 using EducationalAPI.Data.Models;
-using Microsoft.AspNetCore.JsonPatch;
 
 namespace EducationalAPI.Controllers
 {
@@ -58,6 +57,7 @@ namespace EducationalAPI.Controllers
         /// Use to Create Navpoint
         /// </summary>
         /// <returns>No Content</returns>
+        /// <response code="204">No content</response>
         // POST api/<EducationalAPI>/educationalmaterialnavpoints
         [HttpPost("educationalmaterialnavpoints")]
         //[Authorize(Roles = "Admin")]
@@ -65,7 +65,7 @@ namespace EducationalAPI.Controllers
         {
             EduMatNavpoint navpointToAdd = _mapper.Map<EduMatNavpoint>(navpoint);
             navpointToAdd.EduMatType = await _eduMatTypeRepository.GetSingleByConditionAsync(s => s.EduMatTypeId == navpoint.EduMatTypeEduMatTypeId, Array.Empty<string>());
-            navpointToAdd.EduMatAuthor = await _authorRepository.GetSingleByConditionAsync(s=>s.AuthorId==navpoint.AuthorAuthorId, Array.Empty<string>());
+            navpointToAdd.EduMatAuthor = await _authorRepository.GetSingleByConditionAsync(s => s.AuthorId == navpoint.AuthorAuthorId, Array.Empty<string>());
             _ = await _eduMatNavpointRepository.CreateAsync(navpointToAdd);
             return NoContent();
         }
@@ -73,14 +73,17 @@ namespace EducationalAPI.Controllers
         /// Use to Delete Navpoint
         /// </summary>
         /// <returns>No Content</returns>
+        /// <param name="id">Id of navpoint to delete</param>
+        /// <response code="204">No content</response>
+        /// <response code="404">Not found</response>
         // DELETE api/<EducationalAPI>/educationalmaterialnavpoints
         [HttpDelete("educationalmaterialnavpoints/{id}")]
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-           var navpointToDelete = await _eduMatNavpointRepository.GetSingleByConditionAsync(s=>s.EduMatNavpointId==id, Array.Empty<string>());
-           if (navpointToDelete is null) return BadRequest();
-           _ = await _eduMatNavpointRepository.DeleteAsync(navpointToDelete);
+            var navpointToDelete = await _eduMatNavpointRepository.GetSingleByConditionAsync(s => s.EduMatNavpointId == id, Array.Empty<string>());
+            if (navpointToDelete is null) return NotFound();
+            _ = await _eduMatNavpointRepository.DeleteAsync(navpointToDelete);
             return NoContent();
         }
     }

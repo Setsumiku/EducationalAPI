@@ -34,9 +34,10 @@ namespace EducationalAPI.Controllers
             return Ok(authors);
         }
         /// <summary>
-        /// Use to receive all Authors
+        /// Use to receive materials with a higher than 5 average score
         /// </summary>
         /// <returns>Authors</returns>
+        /// <param name="id">Id for Author</param>
         /// <response code="200">Ok</response>
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/authors/{id}/GetHighAverageMaterials
@@ -46,18 +47,20 @@ namespace EducationalAPI.Controllers
         {
 
             var navpointsWithAuthor = await _eduMatNavpointRepository.GetMultipleByConditionAsync(p => p.EduMatAuthor.AuthorId == id, new string[] { "EduMatAuthor", "EduMatReviews" });
+            if(navpointsWithAuthor is null) return NotFound();
             List<EduMatNavpoint> navpointsWithHighAverage = new();
             foreach(var navpoint in navpointsWithAuthor)
             {
                 if(navpoint.CalculateAverageReviewScore()>5) navpointsWithHighAverage.Add(navpoint);
             }
+            if(navpointsWithHighAverage is null) return NotFound();
             var mappedNavpoints = _mapper.Map<IEnumerable<EduMatNavpointReadDTO>>(navpointsWithHighAverage);
             return Ok(mappedNavpoints);
         }
         /// <summary>
-        /// Use to receive all Authors
+        /// Use to receive most productive author
         /// </summary>
-        /// <returns>Authors</returns>
+        /// <returns>most productive author</returns>
         /// <response code="200">Ok</response>
         /// <response code="404">Not found</response>
         // GET: api/<EducationalAPI>/authors/GetMostProductiveAuthor
@@ -67,6 +70,7 @@ namespace EducationalAPI.Controllers
         {
 
             var authors = await _authorRepository.GetAllAsync(Array.Empty<string>());
+            if (authors is null) return NotFound();
             var mostProductiveAuthor = authors.MaxBy(a => a.AmountOfMaterials);
             return Ok(mostProductiveAuthor);
         }
