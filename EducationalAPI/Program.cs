@@ -24,6 +24,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseCors();
+
 app.Run();
 
 void DoSetups(WebApplicationBuilder builder)

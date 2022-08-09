@@ -1,8 +1,10 @@
 ﻿using EducationalAPI.Data.DAL;
 using EducationalAPI.Data.Models;
+using System.Web.Http.Cors;
 
 namespace EducationalAPI.Controllers
 {
+    [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,User")]
     [Route("api/[controller]")]
     [ApiController]
